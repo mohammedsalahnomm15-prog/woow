@@ -11,28 +11,66 @@ public class Book {
         this.author = author;
     }
 
-    // حفظ الكتاب في ملف نصي
+    // 1. دالة حفظ الكتاب
     public void saveToFile() {
         try (FileWriter fw = new FileWriter("library_db.txt", true);
              BufferedWriter bw = new BufferedWriter(fw);
              PrintWriter out = new PrintWriter(bw)) {
             out.println(id + " | " + title + " | " + author);
-            System.out.println("تم حفظ الكتاب بنجاح!");
+            System.out.println("✅ تم حفظ الكتاب بنجاح!");
         } catch (IOException e) {
-            System.out.println("خطأ في الحفظ: " + e.getMessage());
+            System.out.println("❌ خطأ في الحفظ: " + e.getMessage());
         }
     }
 
-    // عرض كل الكتب (دالة ساكنة لاستدعائها بدون إنشاء كائن جديد)
+    // 2. دالة عرض كل الكتب
     public static void displayAllBooks() {
-        System.out.println("\n--- قائمة الكتب المتوفرة ---");
+        System.out.println("\n--- 📚 قائمة الكتب المتوفرة ---");
         try (BufferedReader br = new BufferedReader(new FileReader("library_db.txt"))) {
             String line;
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
             }
         } catch (IOException e) {
-            System.out.println("المكتبة فارغة حالياً أو الملف غير موجود.");
+            System.out.println("⚠️ المكتبة فارغة حالياً أو الملف غير موجود.");
         }
+    }
+
+    // 3. الإضافة الجديدة: دالة البحث عن كتاب بواسطة الـ ID
+    public static void searchById(int searchId) {
+        boolean found = false;
+        System.out.println("\n🔎 جاري البحث عن الكتاب رقم: " + searchId);
+
+        try (BufferedReader br = new BufferedReader(new FileReader("library_db.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                // تقسيم السطر لاستخراج الـ ID ومقارنته
+                String[] parts = line.split(" \\| ");
+                if (parts.length > 0) {
+                    int idInFile = Integer.parseInt(parts[0].trim());
+                    if (idInFile == searchId) {
+                        System.out.println("✨ تم العثور على الكتاب: " + line);
+                        found = true;
+                        break; 
+                    }
+                }
+            }
+            if (!found) System.out.println("❌ نعتذر، لا يوجد كتاب بهذا الرقم.");
+        } catch (IOException | NumberFormatException e) {
+            System.out.println("⚠️ مشكلة في قراءة ملف البيانات.");
+        }
+    }
+
+    // 4. دالة تشغيل البرنامج للتجربة (Main)
+    public static void main(String[] args) {
+        // إضافة كتاب للتجربة
+        Book myBook = new Book(55, "تعلم جافا", "أحمد");
+        myBook.saveToFile();
+
+        // تجربة البحث
+        Book.searchById(55); 
+        
+        // عرض الكل
+        Book.displayAllBooks();
     }
 }
