@@ -1,0 +1,38 @@
+import java.io.*;
+
+public class Book {
+    private int id;
+    private String title;
+    private String author;
+
+    public Book(int id, String title, String author) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+    }
+
+    // حفظ الكتاب في ملف نصي
+    public void saveToFile() {
+        try (FileWriter fw = new FileWriter("library_db.txt", true);
+             BufferedWriter bw = new BufferedWriter(fw);
+             PrintWriter out = new PrintWriter(bw)) {
+            out.println(id + " | " + title + " | " + author);
+            System.out.println("تم حفظ الكتاب بنجاح!");
+        } catch (IOException e) {
+            System.out.println("خطأ في الحفظ: " + e.getMessage());
+        }
+    }
+
+    // عرض كل الكتب (دالة ساكنة لاستدعائها بدون إنشاء كائن جديد)
+    public static void displayAllBooks() {
+        System.out.println("\n--- قائمة الكتب المتوفرة ---");
+        try (BufferedReader br = new BufferedReader(new FileReader("library_db.txt"))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            System.out.println("المكتبة فارغة حالياً أو الملف غير موجود.");
+        }
+    }
+}
