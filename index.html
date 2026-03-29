@@ -16,7 +16,7 @@ public class Book {
         try (FileWriter fw = new FileWriter("library_db.txt", true);
              BufferedWriter bw = new BufferedWriter(fw);
              PrintWriter out = new PrintWriter(bw)) {
-            out.println(id + " | " + title + " | " + author);
+            out.println("%d,%s,%s%n",id,title, author);
             System.out.println("✅ تم حفظ الكتاب بنجاح!");
         } catch (IOException e) {
             System.out.println("❌ خطأ في الحفظ: " + e.getMessage());
